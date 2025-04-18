@@ -6,9 +6,10 @@
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Open Graph 預覽 -->
   <meta property="og:title" content="登入會員表單">
   <meta property="og:description" content="點擊此連結登入您的專屬會員頁面，享受獨家優惠與服務">
-  <meta property="og:url" content="https://liff.line.me/你的LIFF-ID">
+  <meta property="og:url" content="https://liff.line.me/2006833424-0nQE8Jgd">
   <meta property="og:type" content="website">
 
   <style>
@@ -57,8 +58,9 @@
   <script>
     async function main() {
       try {
-        await liff.init({ liffId: "你的LIFF-ID" });
+        await liff.init({ liffId: "2006833424-0nQE8Jgd" });
         await liff.ready;
+
         if (!liff.isLoggedIn()) {
           liff.login();
           return;
@@ -68,8 +70,7 @@
         const uid = liff.getDecodedIDToken().sub;
         const nickname = profile.displayName;
 
-        const webhookUrl = "https://hook.eu.make.com/你的WebhookPath";
-
+        const webhookUrl = "https://hook.us1.make.com/6teaazmito7p8e5v26vfc6hclpbrwm4y";
         window.location.href = `${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`;
       } catch (e) {
         document.querySelector('.loading-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
@@ -81,4 +82,3 @@
   </script>
 </body>
 </html>
-

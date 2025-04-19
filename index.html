@@ -71,7 +71,7 @@
       const nickname = profile.displayName;
 
       const webhookUrl = "https://hook.us1.make.com/6teaazmito7p8e5v26vfc6hclpbrwm4y";
-      const ragicUrl = `https://ap13.ragic.com/OnePlaceLiving/ragichr/2?webview&webaction=form&ver=new&version=2&field1010244=${uid}&field1010245=${encodeURIComponent(nickname)}`;
+      const ragicUrl = `https://ap13.ragic.com/OnePlaceLiving/ragichr/2?field1010244=${uid}&field1010245=${encodeURIComponent(nickname)}`;
 
       // 👇 避免顯示中間頁面：靜靜地送 webhook（避免亂碼）
       await fetch(`${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`, {

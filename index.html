@@ -70,17 +70,34 @@
       const uid = liff.getDecodedIDToken().sub;
       const nickname = profile.displayName;
 
+      // 👉 可選：通知 Make 接收到資料
       const webhookUrl = "https://hook.us1.make.com/6teaazmito7p8e5v26vfc6hclpbrwm4y";
-      const ragicUrl = `https://ap13.ragic.com/OnePlaceLiving/ragichr/2?field1010244=${uid}&field1010245=${encodeURIComponent(nickname)}`;
-
-      // 👇 避免顯示中間頁面：靜靜地送 webhook（避免亂碼）
-      await fetch(`${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`, {
+      fetch(`${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`, {
         method: "GET",
         mode: "no-cors"
       });
 
-      // ✅ 資料送完 ➜ 轉跳到 Ragic 表單，預填欄位
+      // 👉 導向 Ragic 表單頁面（不帶參數，改用後續 JS 寫值）
+      const ragicUrl = "https://ap13.ragic.com/OnePlaceLiving/ragichr/2";
       window.location.href = ragicUrl;
+
+      // 👉 等待跳轉後頁面載入，再寫入欄位（需在表單頁執行這段）
+      // 這段程式碼會在 Ragic 表單的 GitHub 頁面中再次執行！
+
+      window.onload = function () {
+        // 設定延遲，確保 Ragic DOM 元素已載入
+        setTimeout(() => {
+          const uidField = document.querySelector('[name="1010244"]');
+          const nicknameField = document.querySelector('[name="1010245"]');
+
+          if (uidField && nicknameField) {
+            uidField.value = uid;
+            nicknameField.value = nickname;
+          } else {
+            console.warn("找不到欄位，可能還沒載入完！");
+          }
+        }, 1000); // 可以視情況調整延遲時間
+      };
 
     } catch (e) {
       document.querySelector('.loading-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
@@ -90,6 +107,7 @@
 
   main();
 </script>
+
 
 
 </body>

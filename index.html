@@ -55,30 +55,38 @@
     <div class="spinner"></div>
   </div>
 
-  <script>
-    async function main() {
-      try {
-        await liff.init({ liffId: "2006833424-0nQE8Jgd" });
-        await liff.ready;
+ <script>
+  async function main() {
+    try {
+      await liff.init({ liffId: "2006833424-0nQE8Jgd" });
+      await liff.ready;
 
-        if (!liff.isLoggedIn()) {
-          liff.login();
-          return;
-        }
-
-        const profile = await liff.getProfile();
-        const uid = liff.getDecodedIDToken().sub;
-        const nickname = profile.displayName;
-
-        const webhookUrl = "https://hook.us1.make.com/6teaazmito7p8e5v26vfc6hclpbrwm4y";
-        window.location.href = `${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`;
-      } catch (e) {
-        document.querySelector('.loading-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
-        console.error(e);
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
       }
-    }
 
-    main();
-  </script>
+      const profile = await liff.getProfile();
+      const uid = liff.getDecodedIDToken().sub;
+      const nickname = profile.displayName;
+
+      const webhookUrl = "https://hook.us1.make.com/6teaazmito7p8e5v26vfc6hclpbrwm4y";
+      const ragicUrl = "https://ap13.ragic.com/OnePlaceLiving/ragichr/2?webview&webaction=form&ver=new&version=2";
+
+      // 改成 fetch：發送資料到 Make webhook
+      await fetch(`${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`);
+
+      // 等 webhook 成功處理完，再導向 Ragic 表單頁
+      window.location.href = ragicUrl;
+
+    } catch (e) {
+      document.querySelector('.loading-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
+      console.error(e);
+    }
+  }
+
+  main();
+</script>
+
 </body>
 </html>

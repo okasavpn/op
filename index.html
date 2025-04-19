@@ -57,12 +57,13 @@
 
 <script>
   async function main() {
-    const liffId = "2006833424-0nQE8Jgd"; // ✅ 你的 LIFF ID
-    const apiUser = "okasavpn@gmail.com";     // ✅ 請替換成你自己的
-    const apiKey = "R2dpNDh4YUxSVGhYWE80eWp3RTFFT3QwMnpQd0JSTThvMEFybHh5V2hEYkdnb3g5SzJSOUI5TXQ4bmlLV3A0VA==";         // ✅ 請替換成你自己的
+    const liffId = "2006833424-0nQE8Jgd";
+    const apiUser = "okasavpn@gmail.com";
+    const apiKey = "R2dpNDh4YUxSVGhYWE80eWp3RTFFT3QwMnpQd0JSTThvMEFybHh5V2hEYkdnb3g5SzJSOUI5TXQ4bmlLV3A0VA==";
     const sheetUrl = "https://ap13.ragic.com/OnePlaceLiving/ragichr/2";
 
     try {
+      // 初始化 LIFF
       await liff.init({ liffId });
       await liff.ready;
 
@@ -71,39 +72,34 @@
         return;
       }
 
+      // 取得使用者 LINE 資訊
       const profile = await liff.getProfile();
       const uid = liff.getDecodedIDToken().sub;
       const nickname = profile.displayName;
 
-      // 🔔 可選：通知 Make webhook（保留你的原邏輯）
-      const webhookUrl = "https://hook.us1.make.com/6teaazmito7p8e5v26vfc6hclpbrwm4y";
-      fetch(`${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`, {
-        method: "GET",
-        mode: "no-cors"
-      });
-
-      // ✍️ 用 API 建一筆資料到 Ragic
-      const res = await fetch(sheetUrl, {
+      // 建立一筆草稿資料，預填 UID + 暱稱
+      const response = await fetch(sheetUrl, {
         method: "POST",
         headers: {
           "Authorization": "Basic " + btoa(apiUser + ":" + apiKey),
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "1010244": uid,
-          "1010245": nickname
+          "1010244": uid,         // Line UID
+          "1010245": nickname     // 暱稱
         })
       });
 
-      if (!res.ok) {
-        throw new Error("建立 Ragic 草稿資料失敗");
+      const data = await response.json();
+      console.log("Ragic 建立成功：", data);
+
+      if (!response.ok || !data.ragicId) {
+        throw new Error("建立資料失敗");
       }
 
-      const data = await res.json();
-      const newEntryId = data.ragicId;
-
-      // ✅ 導向這筆草稿的編輯頁面（View Form）
-      window.location.href = `${sheetUrl}/${newEntryId}`;
+      // ✅ 導向：該筆資料的可編輯手機版頁面
+      const editUrl = `${sheetUrl}/${data.ragicId}?v=mobile&mode=update`;
+      window.location.href = editUrl;
 
     } catch (e) {
       document.querySelector('.loading-container').innerHTML = `<p>初始化失敗：${e.message}</p>`;
@@ -113,6 +109,7 @@
 
   main();
 </script>
+
 
 </body>
 </html>

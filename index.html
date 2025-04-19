@@ -55,7 +55,7 @@
     <div class="spinner"></div>
   </div>
 
- <script>
+<script>
   async function main() {
     try {
       await liff.init({ liffId: "2006833424-0nQE8Jgd" });
@@ -71,12 +71,15 @@
       const nickname = profile.displayName;
 
       const webhookUrl = "https://hook.us1.make.com/6teaazmito7p8e5v26vfc6hclpbrwm4y";
-      const ragicUrl = "https://ap13.ragic.com/OnePlaceLiving/ragichr/2?webview&webaction=form&ver=new&version=2";
+      const ragicUrl = `https://ap13.ragic.com/OnePlaceLiving/ragichr/2?webview&webaction=form&ver=new&version=2&field1010244=${uid}&field1010245=${encodeURIComponent(nickname)}`;
 
-      // 改成 fetch：發送資料到 Make webhook
-      await fetch(`${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`);
+      // 👇 避免顯示中間頁面：靜靜地送 webhook（避免亂碼）
+      await fetch(`${webhookUrl}?uid=${uid}&nickname=${encodeURIComponent(nickname)}`, {
+        method: "GET",
+        mode: "no-cors"
+      });
 
-      // 等 webhook 成功處理完，再導向 Ragic 表單頁
+      // ✅ 資料送完 ➜ 轉跳到 Ragic 表單，預填欄位
       window.location.href = ragicUrl;
 
     } catch (e) {
@@ -87,6 +90,7 @@
 
   main();
 </script>
+
 
 </body>
 </html>

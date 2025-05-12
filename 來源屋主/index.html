@@ -79,6 +79,10 @@
         external: true
       });
 
+      setTimeout(() => {
+        liff.closeWindow();
+      }, 1000); // 半秒後關閉 LIFF
+ 
     } catch (e) {
       document.querySelector('.loading-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
       console.error(e);

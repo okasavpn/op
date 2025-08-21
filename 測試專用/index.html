@@ -13,20 +13,20 @@
   <meta property="og:type" content="website">
 
   <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
     .logo-container {
       position: relative;
       width: 280px;
-      height: 280px; /* 給固定高度 */
+      height: 156px; /* 使用實際圖片高度 */
       max-width: 90vw; /* 響應式設計 */
     }
     .green-logo, .gray-logo {
@@ -41,7 +41,7 @@
     .gray-logo {
       z-index: 2; /* 確保在上層 */
       clip-path: inset(0 100% 0 0);
-      animation: revealLogo 2s ease-out forwards;
+      animation: revealLogo 1s ease-out forwards;
       animation-delay: 0.5s; /* 延遲開始動畫 */
     }
     .green-logo {

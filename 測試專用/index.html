@@ -23,28 +23,34 @@
     align-items: center;
     box-sizing: border-box;
   }
-  .logo-container {
-    position: relative;
-    width: 280px;
-    height: auto;
-  }
-.green-logo, .gray-logo {
+    .logo-container {
+      position: relative;
+      width: 280px;
+      height: 280px; /* 給固定高度 */
+      max-width: 90vw; /* 響應式設計 */
+    }
+    .green-logo, .gray-logo {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: contain; /* 保持比例 */
       display: block;
     }
     .gray-logo {
+      z-index: 2; /* 確保在上層 */
       clip-path: inset(0 100% 0 0);
-      animation: revealLogo 1s ease-out forwards;
+      animation: revealLogo 2s ease-out forwards;
+      animation-delay: 0.5s; /* 延遲開始動畫 */
+    }
+    .green-logo {
+      z-index: 1; /* 確保在下層 */
     }
     @keyframes revealLogo {
       0% { clip-path: inset(0 100% 0 0); }
       100% { clip-path: inset(0 0% 0 0); }
     }
-</style>
 </head>
 <body>
 <div class="logo-container">

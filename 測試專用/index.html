@@ -28,28 +28,28 @@
     width: 280px;
     height: auto;
   }
-  .gray-logo, .green-logo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  .gray-logo {
-    clip-path: inset(0 100% 0 0);
-    animation: revealLogo 1s ease-out forwards;
-  }
-  @keyframes revealLogo {
-    0% { clip-path: inset(0 100% 0 0); }
-    100% { clip-path: inset(0 0% 0 0); }
-  }
+.green-logo, .gray-logo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .gray-logo {
+      clip-path: inset(0 100% 0 0);
+      animation: revealLogo 1s ease-out forwards;
+    }
+    @keyframes revealLogo {
+      0% { clip-path: inset(0 100% 0 0); }
+      100% { clip-path: inset(0 0% 0 0); }
+    }
 </style>
 </head>
 <body>
 <div class="logo-container">
-  <img class="gray-logo" src="gray.png" alt="Logo Gray">
-  <img class="green-logo" src="green.png" alt="Logo Green">
+  <img class="gray-logo" src="/gray.png" alt="Logo Gray">
+  <img class="green-logo" src="/green.png" alt="Logo Green">
 </div>
 
 <script>

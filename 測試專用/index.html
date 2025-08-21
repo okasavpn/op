@@ -48,8 +48,8 @@
 </head>
 <body>
 <div class="logo-container">
-  <img class="gray-logo" src="你的灰色圖片網址" alt="Logo Gray">
-  <img class="black-logo" src="你的黑色圖片網址" alt="Logo Black">
+  <img class="gray-logo" src="../images/gray.png" alt="Logo Gray">
+  <img class="black-logo" src="../images/green.png" alt="Logo Green">
 </div>
 
 <script>
@@ -77,7 +77,7 @@
       });
 
     } catch (e) {
-      document.querySelector('.loading-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
+      document.querySelector('.logo-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
       console.error(e);
     }
   }

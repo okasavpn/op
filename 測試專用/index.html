@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Redirecting...</title>
+  <!-- LINE LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <!-- QR Code Styling 套件 -->
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:title" content="Ktemp">
   <meta property="og:description" content="點擊此連結填寫需求">
   <meta property="og:url" content="https://liff.line.me/2006833424-0nQE8Jgd">
   <meta property="og:type" content="website">
-  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 
   <style>
     html, body {
@@ -151,10 +154,10 @@
         image: logoUrl,
         imageOptions: {
           crossOrigin: "anonymous",
-          hideBackgroundDots: true, // ✅ 預留 logo 區域空白
+          hideBackgroundDots: true, // ✅ 保留 logo 區域空白
           imageSize: 0.2,
           margin: 4,
-          excavate: true // 同樣確保不被蓋住
+          excavate: true
         },
         dotsOptions: {
           color: "#4a5d23",

@@ -174,28 +174,43 @@
   </div>
 
 <script>
-  // 生成QR code的函式 (使用Google Charts API)
+  // 生成QR code的函式 (使用qr-server.com API)
   function generateQRCode() {
     const liffUrl = 'https://liff.line.me/2006833424-0nQE8Jgd';
-    const canvas = document.getElementById('qrcode');
+    const qrImg = document.getElementById('qrcode');
     
-    // 使用Google Charts QR API生成QR code圖片
-    const qrImageUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(liffUrl)}&choe=UTF-8`;
+    // 使用多個備用QR code API
+    const qrAPIs = [
+      `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(liffUrl)}`,
+      `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(liffUrl)}&choe=UTF-8`,
+      `https://quickchart.io/qr?text=${encodeURIComponent(liffUrl)}&size=200`
+    ];
     
-    // 建立img元素來顯示QR code
-    const qrImg = document.createElement('img');
-    qrImg.src = qrImageUrl;
+    // 嘗試載入第一個API
+    qrImg.src = qrAPIs[0];
     qrImg.style.width = '200px';
     qrImg.style.height = '200px';
     qrImg.style.display = 'block';
-    qrImg.alt = 'QR Code';
     
-    // 清空canvas並插入QR code圖片
-    const container = canvas.parentNode;
-    container.removeChild(canvas);
-    container.appendChild(qrImg);
+    // 如果第一個失敗，嘗試備用API
+    qrImg.onerror = function() {
+      console.log('First QR API failed, trying backup...');
+      qrImg.src = qrAPIs[1];
+      
+      qrImg.onerror = function() {
+        console.log('Second QR API failed, trying third backup...');
+        qrImg.src = qrAPIs[2];
+        
+        qrImg.onerror = function() {
+          console.error('All QR APIs failed');
+          qrImg.alt = 'QR Code載入失敗';
+        };
+      };
+    };
     
-    console.log('QR Code generated for:', liffUrl);
+    qrImg.onload = function() {
+      console.log('QR Code generated successfully for:', liffUrl);
+    };
   }
 
   // 主要執行函式：優先處理電腦版QR code顯示

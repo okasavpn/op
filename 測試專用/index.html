@@ -251,10 +251,16 @@
       const ragicUrl = `https://ap13.ragic.com/OnePlaceLiving/ragichr/2?webview&webaction=form&ver=new&version=2&pfv1010244=${uid}&pfv1010245=${encodeURIComponent(nickname)}`;
 
       // 使用LIFF開啟外部瀏覽器視窗
-      liff.openWindow({
-        url: ragicUrl,
-        external: true
-      });
+liff.openWindow({
+  url: ragicUrl,
+  external: true
+});
+
+// 延遲 2 秒自動關閉 LIFF（避免用戶未開啟完成）
+setTimeout(() => {
+  liff.closeWindow();
+}, 2000);
+
     } catch (e) {
       // 錯誤處理：顯示初始化失敗訊息
       const errorContainer = document.querySelector('.logo-container') || document.querySelector('.desktop-container');

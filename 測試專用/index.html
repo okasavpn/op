@@ -17,9 +17,6 @@
   <meta property="og:url" content="https://liff.line.me/2006833424-0nQE8Jgd">
   <meta property="og:type" content="website">
   
-  <!-- 載入QR code生成函式庫 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
-  
   <style>
     /* 全域樣式設定：移除預設邊距，設定全螢幕高度，置中對齊 */
     html, body {
@@ -157,7 +154,7 @@
   <!-- 手機版顯示：原本的Logo動畫效果 -->
   <div class="logo-container">
     <img class="gray-logo" src="../gray.png" alt="Logo Gray">
-    <img class="green-logo" src="../green.png" alt="Logo Green">
+    <img class="green-logo" src="https://r-forms.oneplace.com.tw/green.png" alt="Logo Green">
   </div>
 
   <!-- 電腦版顯示：QR code掃描介面 -->
@@ -169,7 +166,7 @@
         掃描下方QR Code即可開始填寫表單
       </div>
       <div class="qr-container">
-        <canvas id="qrcode" class="qr-canvas"></canvas>
+        <img id="qrcode" class="qr-canvas" alt="QR Code">
         <!-- QR code中心的logo圖示 -->
         <img class="qr-center-logo" src="https://r-forms.oneplace.com.tw/green.png" alt="Center Logo">
       </div>
@@ -177,41 +174,43 @@
   </div>
 
 <script>
-  // 檢測裝置類型：判斷是否為電腦版瀏覽器
-  function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-  }
-
-  // 生成QR code的函式
+  // 生成QR code的函式 (使用Google Charts API)
   function generateQRCode() {
     const liffUrl = 'https://liff.line.me/2006833424-0nQE8Jgd';
     const canvas = document.getElementById('qrcode');
     
-    // 使用QRCode.js函式庫生成QR code，調整設定以容納中心logo
-    QRCode.toCanvas(canvas, liffUrl, {
-      width: 200,
-      height: 200,
-      margin: 2,
-      color: {
-        dark: '#4a5d23', // 使用深綠色匹配logo風格
-        light: '#FFFFFF'
-      },
-      errorCorrectionLevel: 'H' // 高錯誤修正等級，確保中心有logo時仍可掃描
-    }, function (error) {
-      if (error) console.error('QR Code generation failed:', error);
-    });
+    // 使用Google Charts QR API生成QR code圖片
+    const qrImageUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(liffUrl)}&choe=UTF-8`;
+    
+    // 建立img元素來顯示QR code
+    const qrImg = document.createElement('img');
+    qrImg.src = qrImageUrl;
+    qrImg.style.width = '200px';
+    qrImg.style.height = '200px';
+    qrImg.style.display = 'block';
+    qrImg.alt = 'QR Code';
+    
+    // 清空canvas並插入QR code圖片
+    const container = canvas.parentNode;
+    container.removeChild(canvas);
+    container.appendChild(qrImg);
+    
+    console.log('QR Code generated for:', liffUrl);
   }
 
-  // 主要執行函式：處理LIFF初始化和登入流程
+  // 主要執行函式：優先處理電腦版QR code顯示
   async function main() {
     try {
-      // 如果是電腦版，直接顯示QR code
-      if (!isMobileDevice()) {
+      // 優先檢查螢幕寬度，如果 >= 768px 直接顯示QR code
+      if (window.innerWidth >= 768) {
+        console.log('Desktop detected, generating QR code...');
         generateQRCode();
         return;
       }
 
-      // 手機版執行原本的LIFF流程
+      // 小螢幕執行原本的LIFF流程
+      console.log('Mobile detected, initializing LIFF...');
+      
       // 初始化LIFF SDK
       await liff.init({ liffId: "2006833424-0nQE8Jgd" });
       await liff.ready;
@@ -237,13 +236,23 @@
       });
     } catch (e) {
       // 錯誤處理：顯示初始化失敗訊息
-      document.querySelector('.logo-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
-      console.error(e);
+      const errorContainer = document.querySelector('.logo-container') || document.querySelector('.desktop-container');
+      if (errorContainer) {
+        errorContainer.innerHTML = "<p>初始化失敗：" + e.message + "</p>";
+      }
+      console.error('Error:', e);
     }
   }
 
   // 頁面載入完成後執行主函式
-  main();
+  document.addEventListener('DOMContentLoaded', main);
+  
+  // 如果DOMContentLoaded已經觸發，直接執行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', main);
+  } else {
+    main();
+  }
 </script>
 </body>
 </html>

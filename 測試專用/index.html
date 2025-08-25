@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <!-- 基本HTML文件設定，包含字元編碼和標題 -->
   <meta charset="UTF-8">
   <title>Redirecting...</title>
+  
+  <!-- 載入LINE LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  
+  <!-- 設定響應式設計的視窗參數 -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Open Graph 預覽 -->
+  
+  <!-- Open Graph 預覽設定，用於社群媒體分享時的預覽 -->
   <meta property="og:title" content="Ktemp">
   <meta property="og:description" content="點擊此連結填寫需求">
   <meta property="og:url" content="https://liff.line.me/2006833424-0nQE8Jgd">
   <meta property="og:type" content="website">
-
+  
+  <!-- 載入QR code生成函式庫 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+  
   <style>
+    /* 全域樣式設定：移除預設邊距，設定全螢幕高度，置中對齊 */
     html, body {
       margin: 0;
       padding: 0;
@@ -22,76 +31,219 @@
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
+
+    /* Logo容器的基本樣式設定 */
     .logo-container {
       position: relative;
       width: 280px;
-      height: 156px; /* 使用實際圖片高度 */
-      max-width: 90vw; /* 響應式設計 */
+      height: 156px;
+      max-width: 90vw;
     }
+
+    /* Logo圖片的共同樣式設定 */
     .green-logo, .gray-logo {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain; /* 保持比例 */
+      object-fit: contain;
       display: block;
     }
+
+    /* 灰色Logo的動畫效果設定 */
     .gray-logo {
-      z-index: 2; /* 確保在上層 */
+      z-index: 2;
       clip-path: inset(0 100% 0 0);
       animation: revealLogo 1s ease-out forwards;
-      animation-delay: 0.5s; /* 延遲開始動畫 */
+      animation-delay: 0.5s;
     }
+
+    /* 綠色Logo作為背景層 */
     .green-logo {
-      z-index: 1; /* 確保在下層 */
+      z-index: 1;
     }
+
+    /* Logo顯示動畫的關鍵影格定義 */
     @keyframes revealLogo {
       0% { clip-path: inset(0 100% 0 0); }
       100% { clip-path: inset(0 0% 0 0); }
     }
-    </style>
+
+    /* 電腦版QR code顯示容器 */
+    .desktop-container {
+      display: none; /* 預設隱藏，僅在電腦版顯示 */
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+      max-width: 500px;
+    }
+
+    /* QR code區塊樣式 */
+    .qr-section {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin: 20px 0;
+    }
+
+    /* QR code標題樣式 */
+    .qr-title {
+      color: #333;
+      font-size: 20px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    /* QR code描述文字樣式 */
+    .qr-description {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* QR code畫布容器 */
+    .qr-canvas {
+      margin: 0 auto;
+      border-radius: 10px;
+      background: white;
+      padding: 15px;
+    }
+
+    /* 桌面版Logo樣式 */
+    .desktop-logo {
+      width: 200px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    /* QR code容器相對定位，用於放置中心logo */
+    .qr-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* QR code中心的logo樣式 */
+    .qr-center-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 6px;
+      padding: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    /* 媒體查詢：判斷是否為電腦版畫面 */
+    @media (min-width: 768px) {
+      .logo-container {
+        display: none; /* 隱藏手機版Logo */
+      }
+      .desktop-container {
+        display: flex; /* 顯示電腦版QR code介面 */
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="logo-container">
-  <img class="gray-logo" src="../gray.png" alt="Logo Gray">
-  <img class="green-logo" src="../green.png" alt="Logo Green">
-</div>
+  <!-- 手機版顯示：原本的Logo動畫效果 -->
+  <div class="logo-container">
+    <img class="gray-logo" src="../gray.png" alt="Logo Gray">
+    <img class="green-logo" src="../green.png" alt="Logo Green">
+  </div>
+
+  <!-- 電腦版顯示：QR code掃描介面 -->
+  <div class="desktop-container">
+    <div class="qr-section">
+      <div class="qr-title">請掃描Qrcode 開啟LINE</div>
+      <div class="qr-description">
+        請使用您的手機打開LINE應用程式，<br>
+        掃描下方QR Code即可開始填寫表單
+      </div>
+      <div class="qr-container">
+        <canvas id="qrcode" class="qr-canvas"></canvas>
+        <!-- QR code中心的logo圖示 -->
+        <img class="qr-center-logo" src="https://r-forms.oneplace.com.tw/green.png" alt="Center Logo">
+      </div>
+    </div>
+  </div>
 
 <script>
+  // 檢測裝置類型：判斷是否為電腦版瀏覽器
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  }
+
+  // 生成QR code的函式
+  function generateQRCode() {
+    const liffUrl = 'https://liff.line.me/2006833424-0nQE8Jgd';
+    const canvas = document.getElementById('qrcode');
+    
+    // 使用QRCode.js函式庫生成QR code，調整設定以容納中心logo
+    QRCode.toCanvas(canvas, liffUrl, {
+      width: 200,
+      height: 200,
+      margin: 2,
+      color: {
+        dark: '#4a5d23', // 使用深綠色匹配logo風格
+        light: '#FFFFFF'
+      },
+      errorCorrectionLevel: 'H' // 高錯誤修正等級，確保中心有logo時仍可掃描
+    }, function (error) {
+      if (error) console.error('QR Code generation failed:', error);
+    });
+  }
+
+  // 主要執行函式：處理LIFF初始化和登入流程
   async function main() {
     try {
+      // 如果是電腦版，直接顯示QR code
+      if (!isMobileDevice()) {
+        generateQRCode();
+        return;
+      }
+
+      // 手機版執行原本的LIFF流程
+      // 初始化LIFF SDK
       await liff.init({ liffId: "2006833424-0nQE8Jgd" });
       await liff.ready;
 
+      // 檢查使用者是否已登入LINE
       if (!liff.isLoggedIn()) {
         liff.login();
         return;
       }
 
+      // 取得使用者資料
       const profile = await liff.getProfile();
       const uid = profile.userId;
       const nickname = profile.displayName;
 
-      // ✅ Ragic 表單網址（已啟用預填功能）
+      // 建構Ragic表單網址，並預填使用者資料
       const ragicUrl = `https://ap13.ragic.com/OnePlaceLiving/ragichr/2?webview&webaction=form&ver=new&version=2&pfv1010244=${uid}&pfv1010245=${encodeURIComponent(nickname)}`;
 
-      // ✅ 使用 LIFF 的 openWindow ➜ 強制在 Safari / Chrome 開啟
+      // 使用LIFF開啟外部瀏覽器視窗
       liff.openWindow({
         url: ragicUrl,
         external: true
       });
-
     } catch (e) {
+      // 錯誤處理：顯示初始化失敗訊息
       document.querySelector('.logo-container').innerHTML = "<p>初始化失敗：" + e.message + "</p>";
       console.error(e);
     }
   }
 
+  // 頁面載入完成後執行主函式
   main();
 </script>
-
-
 </body>
 </html>

@@ -9,6 +9,7 @@
   <meta property="og:description" content="點擊此連結填寫需求">
   <meta property="og:url" content="https://liff.line.me/2006833424-0nQE8Jgd">
   <meta property="og:type" content="website">
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 
   <style>
     html, body {
@@ -89,11 +90,9 @@
 
     .qr-canvas {
       margin: 0 auto;
-      width: 240px;
-      height: 240px;
       border-radius: 30px;
       background: white;
-      padding: 15px;
+      padding: 0;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       display: block;
     }
@@ -120,11 +119,13 @@
   </style>
 </head>
 <body>
+  <!-- 手機版顯示 -->
   <div class="logo-container">
     <img class="gray-logo" src="../gray.png" alt="Logo Gray">
     <img class="green-logo" src="https://r-forms.oneplace.com.tw/green.png" alt="Logo Green">
   </div>
 
+  <!-- 桌面版顯示 -->
   <div class="desktop-container">
     <div class="qr-section">
       <div class="qr-title">請掃描Qrcode 開啟LINE</div>
@@ -133,47 +134,50 @@
         掃描下方QR Code即可開始填寫表單
       </div>
       <div class="qr-container">
-        <img id="qrcode" class="qr-canvas" alt="QR Code">
+        <canvas id="qrcode-canvas" class="qr-canvas"></canvas>
       </div>
     </div>
   </div>
 
   <script>
     function generateQRCode() {
-      const liffUrl = 'https://liff.line.me/2006833424-0nQE8Jgd';
-      const logoUrl = 'https://r-forms.oneplace.com.tw/green.png';
-      const qrImg = document.getElementById('qrcode');
+      const liffUrl = "https://liff.line.me/2006833424-0nQE8Jgd";
+      const logoUrl = "https://r-forms.oneplace.com.tw/green.png";
+      const qrCode = new QRCodeStyling({
+        width: 240,
+        height: 240,
+        type: "canvas",
+        data: liffUrl,
+        image: logoUrl,
+        imageOptions: {
+          crossOrigin: "anonymous",
+          hideBackgroundDots: true, // ✅ 預留 logo 區域空白
+          imageSize: 0.2,
+          margin: 4,
+          excavate: true // 同樣確保不被蓋住
+        },
+        dotsOptions: {
+          color: "#4a5d23",
+          type: "rounded"
+        },
+        backgroundOptions: {
+          color: "#ffffff"
+        },
+        cornersSquareOptions: {
+          type: "extra-rounded"
+        },
+        cornersDotOptions: {
+          type: "dot"
+        }
+      });
 
-      const qrAPIs = [
-        `https://quickchart.io/qr?text=${encodeURIComponent(liffUrl)}&size=240&margin=1&dark=4a5d23&light=ffffff&ecLevel=H&centerImageUrl=${encodeURIComponent(logoUrl)}&centerImageSizeRatio=0.18&centerImageBackgroundColor=ffffff&centerImageBorderRadius=12`,
-        `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(liffUrl)}&color=4a5d23&bgcolor=ffffff&ecc=H`,
-        `https://quickchart.io/qr?text=${encodeURIComponent(liffUrl)}&size=240&margin=1&dark=4a5d23&light=ffffff&ecLevel=H`
-      ];
-
-      qrImg.src = qrAPIs[0];
-
-      qrImg.onerror = function () {
-        console.log('First QR API failed, trying fallback...');
-        qrImg.src = qrAPIs[1];
-        qrImg.onerror = function () {
-          console.log('Fallback QR API failed, using last resort...');
-          qrImg.src = qrAPIs[2];
-          qrImg.onerror = function () {
-            console.error('All QR APIs failed');
-            qrImg.alt = 'QR Code載入失敗';
-          };
-        };
-      };
-
-      qrImg.onload = function () {
-        console.log('QR Code with logo loaded');
-      };
+      qrCode.append(document.getElementById("qrcode-canvas"));
     }
 
     async function main() {
       try {
         if (window.innerWidth >= 768) {
-          console.log('Desktop detected, generating QR code...');
+          console.log('Desktop detected, generating styled QR code...');
           generateQRCode();
           return;
         }
@@ -192,7 +196,6 @@
         const nickname = profile.displayName;
 
         const ragicUrl = `https://ap13.ragic.com/OnePlaceLiving/ragichr/2?webview&webaction=form&ver=new&version=2&pfv1010244=${uid}&pfv1010245=${encodeURIComponent(nickname)}`;
-
         liff.openWindow({
           url: ragicUrl,
           external: true

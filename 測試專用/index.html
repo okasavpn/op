@@ -181,14 +181,14 @@
     
     // 使用支援logo嵌入和自訂顏色的QR code API
     const qrAPIs = [
-      // API 1: QuickChart with logo (最穩定的logo支援)
-      `https://quickchart.io/qr?text=${encodeURIComponent(liffUrl)}&size=200&centerImageUrl=${encodeURIComponent(logoUrl)}&centerImageSizeRatio=0.3&margin=1&dark=4a5d23&light=ffffff`,
+      // API 1: QuickChart with logo (加大白色邊框，降低logo比例)
+      `https://quickchart.io/qr?text=${encodeURIComponent(liffUrl)}&size=200&centerImageUrl=${encodeURIComponent(logoUrl)}&centerImageSizeRatio=0.2&centerImageBackgroundColor=ffffff&centerImageBorderRadius=8&margin=1&dark=4a5d23&light=ffffff&ecLevel=H`,
       
-      // API 2: QR Code Monkey with logo
-      `https://api.qrcode-monkey.com/qr/custom?data=${encodeURIComponent(liffUrl)}&size=200&file=png&download=false&logo=${encodeURIComponent(logoUrl)}&colorDark=4a5d23&colorLight=ffffff`,
+      // API 2: 備用方案 (無logo)
+      `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(liffUrl)}&color=4a5d23&bgcolor=ffffff&ecc=H`,
       
-      // API 3: 備用方案 (無logo)
-      `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(liffUrl)}&color=4a5d23&bgcolor=ffffff`
+      // API 3: 最後備用
+      `https://quickchart.io/qr?text=${encodeURIComponent(liffUrl)}&size=200&margin=1&dark=4a5d23&light=ffffff&ecLevel=H`
     ];
     
     // 嘗試載入第一個API (帶logo)
@@ -196,7 +196,7 @@
     qrImg.style.width = '200px';
     qrImg.style.height = '200px';
     qrImg.style.display = 'block';
-    qrImg.style.borderRadius = '15px'; // 超圓角效果
+    qrImg.style.borderRadius = '20px'; // 超圓角效果
     
     // 如果第一個失敗，嘗試備用API
     qrImg.onerror = function() {
